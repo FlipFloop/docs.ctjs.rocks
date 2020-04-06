@@ -4,13 +4,13 @@
 This tutorial assumes that you have finished the tutorial [Making Games: Jetty Cat](tut-making-jettycat.html). You should complete it first.
 :::
 
-The game is complete mechanic-wise, but there is a lot of ways to improve it aesthetically and gameplay-wise! This section also highlights a number of new v1.3 features.
+The game is complete mechanic-wise, but there is a lot of ways to improve it aesthetically and gameplay-wise! This section also highlights some new v1.3 features.
 
 [[toc]]
 
 ## Transition between rooms
 
-Ct.js has a module called `ct.transision`. It allows you to easily create nice transitions between levels. The idea is that you start a first half of a transition on button press or some other event, then switch to another room, and call the second half of a transition in its On Create code.
+Ct.js has a module called `ct.transision`. It allows you to easily create nice transitions between levels. The idea is that you start the first half of a transition on button press or some other event, then switch to another room and call the second half of a transition in its On Create code.
 
 Enable the module `transition` in the Catmods tab. It signals that it depends on the `tween` catmod, so enable it as well.
 
@@ -89,11 +89,11 @@ if (ct.touch.collideUi(this)) {
 
 We create a flag `this.pressed` to make sure that the code that runs the animation only once. Running it multiple times won't hurt, but keeps the debugger's log clean as `ct.tween` will warn about interrupted animations otherwise.
 
-Then we start an animation for `this.getRoom()`, that will return the room `UI_Paused` that owns this button, and change its alpha value back to 0. After that, we can see that `ct.tween.add` creates an asynchronous event, and we remove the room and unpause the game inside the `.then(() => {…});` clause.
+Then we start animation for `this.getRoom()`, which will return the room `UI_Paused` that owns this button, and change its alpha value back to 0. After that, we can see that `ct.tween.add` creates an asynchronous event, and we remove the room and unpause the game inside the `.then(() => {…});` clause.
 
 ## Smoothly resuming the game after it has been paused
 
-Though the "paused" menu fades out slowly, it is still hard for a player to catch up and prevent the cat from bumping into ground. To prevent that, we can use `ct.tween` to… animate time! `ct.pixiApp.ticker.speed = 1;` can be not just 0 and 1, but also anything in between, and even beyound 1. Large values will make the game run faster, while values close to 0 will slow the game. Thus, we can animate the value `ct.pixiApp.ticker.speed` to make the game transition from paused to fully runnning state.
+Though the "paused" menu fades out slowly, it is still hard for a player to catch up and prevent the cat from bumping into the ground. To prevent that, we can use `ct.tween` to… animate time! `ct.pixiApp.ticker.speed = 1;` can be not just 0 and 1, but also anything in between, and even beyond 1. Large values will make the game run faster, while values close to 0 will slow the game. Thus, we can animate the value `ct.pixiApp.ticker.speed` to make the game transition from paused to fully running state.
 
 Open the type `Button_Continue` again, and modify the script so it fires another `ct.tween.add` after it finishes the first one:
 
@@ -128,7 +128,7 @@ Now players can catch up with the game and save their cat from falling.
 
 From v1.3, ct.js allows you to visually design particle effects and play them in your game. And it's cool! Let's create two effects: one will be a jet smoke for the cat. The other will show a burst of smaller stars when you collect one.
 
-### Making a star burst
+### Making a starburst
 
 Open the "FX" tab at the top, and create a new particle emitter. Call it `StarBurst`.
 
@@ -145,9 +145,9 @@ You can set a preview texture in the right bottom corner to see how your effect 
 Here are some directions on how to make this effect:
 
 * To make the burst and not an infinite stream, open the "Spawning" section and set emitter's lifetime. This is a fast effect, so you will need small values like 0.1 seconds.
-* The "Gravity" section will make stars falling down after they burst out. You will need the vertical, Y axis, and pretty large values: I used ~1400 for my effect.
+* The "Gravity" section will make stars falling down after they burst out. You will need the vertical, Y-axis, and pretty large values: I used ~1400 for my effect.
 * When gravity is enabled, only the first velocity point will affect particles' motion.
-* To make the effect uneven and less artificial, make sure particles have different lifetime at the "Spawning" category, so they become more random. Tweaking minimum velocity and size also helps.
+* To make the effect uneven and less artificial, make sure particles have a different lifetime at the "Spawning" category, so they become more random. Tweaking minimum velocity and size also helps.
 * A relatively large circular area that covers most of the preview texture will make the effect more like it was a big star breaking down into smaller pieces. You can set the spawn shape and its size under the category "Shape and Positioning". Check the box "Show shape visualizer" to see the shape.
 
 When you're ready, hit the "Apply" button at the bottom of the left column.
@@ -171,7 +171,7 @@ Here are some hints:
 * Change the background color in the top-right corner of the window to better see white bubbles;
 * Start by changing the Direction tab » Starting direction fields so the particles flow downwards. A good range is between 90 and 110 degrees.
 * The default texture's size will be way too big; tweak its scale in the graph under the folding section called "Scaling", so it is somewhere around `0.3`.
-* Tweak the value Scaling » Minimum size to spawn particles of different size.
+* Tweak the value Scaling » Minimum size to spawn particles of different sizes.
 * Precisely position the emitter so that it spawns right from the jet by tweaking the emitter's position, in the section called "Shape and Positioning".
 * Change the value Spawning » Time between bursts to change the density of a jet. Smaller values spawn larger amounts of particles.
 
@@ -191,7 +191,7 @@ Read [the docs for `ct.emitters`](ct.emitters.html) to learn more about other me
 
 The cat should now have a jet of smoke running from its jetpack. You may need to tweak the jet's particle size and its speed on the "FX" tab.
 
-Let's add a bit of dynamics to this jet: we will spawn new particles only when the cat flies up. We have the reference `this.jet`, and we can use it to pause emitter and unpause it when the player presses or releases the screen.
+Let's add a bit of dynamic to this jet: we will spawn new particles only when the cat flies up. We have the reference `this.jet`, and we can use it to pause emitter and unpause it when the player presses or releases the screen.
 
 Open the cat's "On Step" tab and place this piece of code after the "game over" condition:
 
@@ -211,13 +211,13 @@ And that is it for particles; time for some testing!
 
 ## Adding subtle animations to the cat and stars
 
-Particles help liven up the game, but it still may feel stiff and static. Let's add little animations to the cat and stars. We will rotate the cat depending to its vertical speed, and the star by time.
+Particles help liven up the game, but it still may feel stiff and static. Let's add little animations to the cat and stars. We will rotate the cat depending on its vertical speed, and the star by time.
 
 ### Rotating the cat
 
-Every copy has a parameter `this.rotation`, that sets visual rotation of a texture in degrees. Each copy also has `this.speed` and `this.direction` we've used, and they both define additional parameters `this.vspeed` and `this.hspeed` — the vertical and horizontal speed decomposed from speed and direction. These two can be negative values when a copy moves in an opposite direction from how the axis goes. (E.g. X axis points to the right, its values grow from left to right. Moving to the right makes positive `hspeed`, moving to the left makes negative `hspeed`.)
+Every copy has a parameter `this.rotation`, that sets the visual rotation of a texture in degrees. Each copy also has `this.speed` and `this.direction` we've used, and they both define additional parameters `this.vspeed` and `this.hspeed` — the vertical and horizontal speed decomposed from speed and direction. These two can be negative values when a copy moves in the opposite direction from how the axis goes. (E.g. the X-axis points to the right, its values grow from left to right. Moving to the right makes positive `hspeed`, moving to the left makes negative `hspeed`.)
 
-We can tie `this.vspeed` and `this.rotation` of a cat together, so that it rotates when falling or flying up. It is done by simply assigning one value to another in the Draw tab.
+We can tie `this.vspeed` and `this.rotation` of a cat together so that it rotates when falling or flying up. It is done by simply assigning one value to another in the Draw tab.
 
 This line will work:
 
@@ -225,7 +225,7 @@ This line will work:
 this.rotation = this.vspeed;
 ```
 
-Though it will result into a too strong rotation. Adding a multiplier will make it look better:
+Though it will result in a too strong rotation. Adding a multiplier will make it look better:
 
 ```js
 this.rotation = this.vspeed * 0.3;
@@ -248,7 +248,7 @@ this.wiggleTime += ct.delta * 0.2;
 this.rotation = Math.sin(this.wiggleTime) * 5;
 ```
 
-Here we change `this.wiggleTime` at each frame by the elapsed time, multiplied by 0.2 to slow down the animation. Then we use `Math.sin` to get a sinus of the `wiggleTime` — changing the latter at each frame will result into smooth oscillation between -1 and 1. By multiplying it by 5, we make the effect five times stronger.
+Here we change `this.wiggleTime` at each frame by the elapsed time, multiplied by 0.2 to slow down the animation. Then we use `Math.sin` to get a sinus of the `wiggleTime` — changing the latter at each frame will result in a smooth oscillation between -1 and 1. By multiplying it by 5, we make the effect five times stronger.
 
 ![A wiggling, animated star](./images/tutJettyCat_StarWiggle.gif)
 
@@ -270,7 +270,7 @@ if (ct.actions.Poof.pressed) {
 }
 ```
 
-Here we again change the property that is used inside `Math.sin`. We set a copy's horizontal and vertical scale to this sinus wave plus add `1` so that the copy is not shrinked into a point. (Without this `1 +`, the sine wave would oscillate around 0, meaning near 0% of a copy's size.)
+Here we again change the property that is used inside `Math.sin`. We set a copy's horizontal and vertical scale to this sinus wave plus add `1` so that the copy is not shrunk into a point. (Without this `1 +`, the sine wave would oscillate around 0, meaning near 0% of a copy's size.)
 
 When a user presses the screen, `ct.actions.Poof.pressed` becomes `true`, and that's where we remove the copy as the user starts manipulating their cat.
 
@@ -278,9 +278,9 @@ The last step is adding this copy to `UI_InGame`, somewhere in the center of the
 
 ## Animating background in the main menu + parallax effect
 
-The parallax effect is used in gamedev since the ancient times — once console's processors got strong enough to draw backgrounds. The effect is made by moving a number of background layers at different speeds to create an effect of depth. Though we won't get a strong effect in this tutorial, we will learn how to config backgrounds in ct.js, and liven up our main menu and overall view.
+The parallax effect is used in gamedev since ancient times — once console's processors got strong enough to draw backgrounds. The effect is made by moving several background layers at different speeds to create an effect of depth. Though we won't get a strong effect in this tutorial, we will learn how to config backgrounds in ct.js, and liven up our main menu and overall view.
 
-Go to the room `MainMenu`, and open the "Backgrounds" tab in the left column. Then, click the gear icon next to the background `BG_Sky`. We will need to slowly move the background from left to right, so that our clouds get moving. Set the Movement speed to `-1`, `0`. These values tell the background to move against the X axis one pixel at second.
+Go to the room `MainMenu`, and open the "Backgrounds" tab in the left column. Then, click the gear icon next to the background `BG_Sky`. We will need to slowly move the background from left to right so that our clouds get moving. Set the Movement speed to `-1`, `0`. These values tell the background to move against the X-axis one pixel at second.
 
 ![Setting a background's movement speed in ct.js](./images/tutJettyCat_32.png)
 
